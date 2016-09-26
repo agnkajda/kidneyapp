@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6aa7db</color>
+    <color name="colorPrimaryDark">#303030</color>
+    <color name="colorAccent">#d7241f</color>
+    <color name="grey">#cccccc</color>
+    <color name="kidney_light_blue">#6aa7db</color>
+</resources>
