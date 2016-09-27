@@ -218,7 +218,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             mLocation = location;
         }
     }
-
+//chyba bangla połączenie zostało zgwałcone hahhahahaha :D ale jest push successfu rozlazam sie
     @Override
     public void onItemSelected(Uri contentUri) {
         if (mTwoPane) {
