@@ -151,7 +151,12 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             }
         } else {
             mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
         }
+
+        ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_forecast));
+        forecastFragment.setUseTodayLayout(!mTwoPane);
     }
 
     @Override
@@ -218,7 +223,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             mLocation = location;
         }
     }
-//chyba bangla połączenie zostało zgwałcone hahhahahaha :D ale jest push successfu rozlazam sie
+
     @Override
     public void onItemSelected(Uri contentUri) {
         if (mTwoPane) {
