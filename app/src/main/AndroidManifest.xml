@@ -61,11 +61,6 @@
                         android:resource="@xml/authenticator" />
                 </service>
 
-        <!--
-        tego chyba nie ma być
-        <activity android:name=".DetailFragment"></activity>
--->
-
 
         <!-- The SyncAdapter service -->
                 <service
