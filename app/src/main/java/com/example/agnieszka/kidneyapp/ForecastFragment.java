@@ -15,6 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.content.Intent;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import com.example.agnieszka.kidneyapp.sync.SunshineSyncAdapter;
 
 import com.example.agnieszka.kidneyapp.data.WeatherContract;
 
@@ -165,9 +170,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        String location = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(location);
+        //String location = Utility.getPreferredLocation(getActivity());
+        //new FetchWeatherTask(getActivity()).execute(location);
+        KidneySyncAdapter.syncImmediately(getActivity());
     }
 
     @Override

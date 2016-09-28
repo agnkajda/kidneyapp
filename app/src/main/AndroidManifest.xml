@@ -4,6 +4,13 @@
 
     <!-- This permission is necessary in order for Sunshine to perform network access. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Permissions required by the sync adapter -->
+    <uses-permission
+        android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 
     <application
         android:allowBackup="true"
@@ -41,9 +48,35 @@
 
         <provider
             android:name=".data.WeatherProvider"
-            android:authorities="com.example.agnieszka.kidneyapp" />
+            android:authorities="com.example.agnieszka.kidneyapp"
+            android:exported="false"
+        android:syncable="true" />
+
+              <!-- SyncAdapter's dummy authentication service -->
+               <service android:name=".sync.KidneyAuthenticatorService">
+                    <intent-filter>
+                        <action android:name="android.accounts.AccountAuthenticator" />
+                    </intent-filter>
+                    <meta-data
+                        android:name="android.accounts.AccountAuthenticator"
+                        android:resource="@xml/authenticator" />
+                </service>
 
         <activity android:name=".DetailFragment"></activity>
+
+        <!-- The SyncAdapter service -->
+                <service
+                    android:name=".sync.KidneySyncService"
+                    android:exported="true"
+                    >
+                    <intent-filter>
+                        <action android:name="android.content.SyncAdapter" />
+                    </intent-filter>
+                    <meta-data
+                        android:name="android.content.SyncAdapter"
+                        android:resource="@xml/syncadapter" />
+                </service>
+
     </application>
 
 </manifest>
