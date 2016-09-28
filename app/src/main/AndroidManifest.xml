@@ -48,7 +48,7 @@
 
         <provider
             android:name=".data.WeatherProvider"
-            android:authorities="com.example.agnieszka.kidneyapp"
+            android:authorities="@string/content_authority"
             android:exported="false"
         android:syncable="true" />
 
