@@ -25,16 +25,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
-//  TUTAJ WYSZKUJEMY JEDZENIA DLA PODANEJ NAZWY
+// TUTAJ WYSZUKUJEMY DANE DLA KONRETNEGO JEDZENIA (PO NUMERZE NDBO)
 
-public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
+public class FetchFoodReportTask extends AsyncTask<String, Void, Void> {
 
-    private final String LOG_TAG = FetchKidneyTask.class.getSimpleName();
+    private final String LOG_TAG = FetchFoodReportTask.class.getSimpleName();
 
     private ArrayAdapter<String> mForecastAdapter;
     private final Context mContext;
 
-    public FetchKidneyTask(Context context) {
+    public FetchFoodReportTask(Context context) {
         mContext = context;
     }
 
