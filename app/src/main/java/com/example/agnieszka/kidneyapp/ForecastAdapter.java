@@ -24,7 +24,7 @@ public class ForecastAdapter extends CursorAdapter {
         /**
      * Cache of the children views for a forecast list item.
      */
-
+// tutaj wysietlaja sie te dane z tabeli
         public static class ViewHolder {
             public final ImageView iconView;
             public final TextView dateView;

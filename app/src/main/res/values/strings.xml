@@ -59,6 +59,9 @@
     <string name="pref_sex_female" translatable="false">female</string>
 
 
+    <string name="search_for_food_label">Search</string>
+    <string name="search_for_food_key" translatable="false">search</string>
+
     <!-- Label for metric option in temperature unit preference [CHAR LIMIT=25] -->
     <string name="pref_units_label_metric">Metric</string>
 

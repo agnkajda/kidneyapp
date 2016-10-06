@@ -135,18 +135,27 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
         final String OWM_DESCRIPTION = "main";
         final String OWM_WEATHER_ID = "id";
 
+        final String NDB_LIST = "list";
         final String NDB_NDBNO = "ndbno";
         final String NDB_NAME = "name";
+
+        final String NDB_ITEM = "item";
 
         //	ndbno	the food’s NDB Number
         // name	the food’s name
 
         try {
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
-            JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
+            JSONArray weatherArray = forecastJson.getJSONArray(NDB_LIST);
+
+            JSONObject itemJson = forecastJson.getJSONObject(NDB_ITEM);
+            String itemName = itemJson.getString(NDB_NAME);
+            String itemNdbno = itemJson.getString(NDB_NDBNO);
 
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
             String cityName = cityJson.getString(OWM_CITY_NAME);
+
+
 
             JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
             double cityLatitude = cityCoord.getDouble(OWM_LATITUDE);
@@ -236,7 +245,7 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
                 inserted = mContext.getContentResolver().bulkInsert(WeatherEntry.CONTENT_URI, cvArray);
             }
 
-            Log.d(LOG_TAG, "FetchWeatherTask Complete. " + inserted + " Inserted");
+            Log.d(LOG_TAG, "FetchKidneyTask Complete. " + inserted + " Inserted");
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);

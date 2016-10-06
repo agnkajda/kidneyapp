@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.net.Uri;
 import com.example.agnieszka.kidneyapp.data.WeatherContract;
 import com.example.agnieszka.kidneyapp.data.WeatherContract.WeatherEntry;
-
+import com.example.agnieszka.kidneyapp.data.KidneyContract;
 /**
  * A placeholder fragment containing a simple view.
  */
