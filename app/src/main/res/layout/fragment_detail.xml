@@ -11,6 +11,8 @@
         android:padding="16dp">
 
         <!-- Header: Day, Date -->
+
+
         <TextView
             android:fontFamily="sans-serif-condensed"
             android:id="@+id/detail_day_textview"
@@ -18,6 +20,16 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="24sp" />
+
+
+        <!-- dodany przycisk, ale go nie widać! -->
+        <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:id="@+id/add_food_button"
+            android:backgroundTint="@color/kidney_blue" />
 
         <TextView
             android:fontFamily="sans-serif-condensed"
@@ -35,6 +47,16 @@
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
+
+            <!-- dodany przycisk, ale go nie widać! -->
+            <Button
+                android:text="Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:id="@+id/add_food_button2"
+                android:backgroundTint="@color/kidney_blue" />
+
             <LinearLayout
                 android:gravity="left"
                 android:layout_height="wrap_content"
@@ -47,6 +69,16 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:textSize="96sp" />
+
+                <!-- dodany przycisk, ale go nie widać! -->
+                <Button
+                    android:text="Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:id="@+id/add_food_button3"
+                    android:backgroundTint="@color/kidney_blue" />
+
 
                 <TextView
                     android:id="@+id/detail_low_textview"
@@ -76,6 +108,9 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:textAppearanceLarge"
                     android:textColor="@color/grey_700" />
+
+
+
             </LinearLayout>
         </LinearLayout>
 
@@ -106,6 +141,9 @@
             android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:textAppearance="?android:textAppearanceLarge" />
+
+
+
             </LinearLayout>
     </LinearLayout>
 </ScrollView>

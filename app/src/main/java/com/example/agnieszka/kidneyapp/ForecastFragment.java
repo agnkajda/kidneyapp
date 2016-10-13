@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.content.Intent;
 import android.app.AlarmManager;
@@ -35,6 +36,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private ListView mListView;
     private int mPosition = ListView.INVALID_POSITION;
     private boolean mUseTodayLayout;
+    Button addFood;
+    Context context;
 
     private static final String SELECTED_KEY = "selected_position";
 
@@ -71,6 +74,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_WEATHER_CONDITION_ID = 6;
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
+
+
 
 
     /**
@@ -122,6 +127,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                              Bundle savedInstanceState) {
         // The ForecastAdapter will take data from a source and
         // use it to populate the ListView it's attached to.
+
+
+
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
@@ -129,6 +137,21 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
         mListView.setAdapter(mForecastAdapter);
+
+
+        //przycisk działa!!!
+        addFood = (Button) rootView.findViewById(R.id.add_food_button);
+        View.OnClickListener clicking = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context = getActivity().getApplicationContext();
+                Intent intent = new Intent (context, AddingFood.class);
+                startActivity(intent);
+            }
+
+        };
+        addFood.setOnClickListener(clicking);
+
 
         // We'll call our MainActivity
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

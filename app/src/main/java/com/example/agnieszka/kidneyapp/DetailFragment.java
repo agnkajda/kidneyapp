@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.net.Uri;
@@ -76,6 +77,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mHumidityView;
     private TextView mWindView;
     private TextView mPressureView;
+    Button addFood;
+
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -100,6 +103,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
+        addFood = (Button) rootView.findViewById(R.id.add_food_button);
         return rootView;
     }
 

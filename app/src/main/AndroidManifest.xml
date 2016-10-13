@@ -72,7 +72,10 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <activity android:name=".AddingFood"></activity>
+        <activity android:name=".AddingFood" />
+        <activity
+            android:name=".ChooseTheMeal"
+            android:label="@string/title_activity_choose_the_meal"></activity>
     </application>
 
 </manifest>

@@ -63,5 +63,6 @@
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:textAppearanceLarge"
             android:textColor="@color/white"/>
+
     </LinearLayout>
 </LinearLayout>

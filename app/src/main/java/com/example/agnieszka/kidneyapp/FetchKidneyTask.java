@@ -41,16 +41,8 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
     private boolean DEBUG = true;
 
 
-    /**
-     * Helper method to handle insertion of a new location in the weather database.
-     *
-     * @param locationSetting The location string used to request updates from the server.
-     * @param cityName A human-readable city name, e.g "Mountain View"
-     * @param lat the latitude of the city
-     * @param lon the longitude of the city
-     * @return the row ID of the added location.
-     */
-    long addLocation(String locationSetting, String cityName, double lat, double lon) {
+
+    /*long addLocation(String locationSetting, String cityName, double lat, double lon) {
         long locationId;
 
         // First, check if the location with this city name exists in the db
@@ -90,7 +82,7 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
         // Wait, that worked?  Yes!
         return locationId;
     }
-
+*/
 
     /**
      * Take the String representing the complete forecast in JSON Format and
@@ -148,20 +140,22 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
             JSONArray weatherArray = forecastJson.getJSONArray(NDB_LIST);
 
-            JSONObject itemJson = forecastJson.getJSONObject(NDB_ITEM);
+            JSONObject listJson = forecastJson.getJSONObject(NDB_LIST);
+            JSONObject itemJson = listJson.getJSONObject(NDB_ITEM);
             String itemName = itemJson.getString(NDB_NAME);
             String itemNdbno = itemJson.getString(NDB_NDBNO);
 
+
+
+
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
             String cityName = cityJson.getString(OWM_CITY_NAME);
-
-
 
             JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
             double cityLatitude = cityCoord.getDouble(OWM_LATITUDE);
             double cityLongitude = cityCoord.getDouble(OWM_LONGITUDE);
 
-            long locationId = addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
+            //long locationId = addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
 
             // Insert the new weather information into the database
             Vector<ContentValues> cVVector = new Vector<ContentValues>(weatherArray.length());
@@ -223,7 +217,7 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
 
                 ContentValues weatherValues = new ContentValues();
 
-                weatherValues.put(WeatherEntry.COLUMN_LOC_KEY, locationId);
+                //weatherValues.put(WeatherEntry.COLUMN_LOC_KEY, locationId);
                 weatherValues.put(WeatherEntry.COLUMN_DATE, dateTime);
                 weatherValues.put(WeatherEntry.COLUMN_HUMIDITY, humidity);
                 weatherValues.put(WeatherEntry.COLUMN_PRESSURE, pressure);
