@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.agnieszka.kidneyapp.data.WeatherContract;
 import com.example.agnieszka.kidneyapp.data.WeatherContract.WeatherEntry;
@@ -27,15 +28,16 @@ import java.util.Vector;
 
 //  TUTAJ WYSZKUJEMY JEDZENIA DLA PODANEJ NAZWY
 
-public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
+public class FetchKidneyTask extends AsyncTask<String, Void, String[]> {
 
     private final String LOG_TAG = FetchKidneyTask.class.getSimpleName();
 
-    private ArrayAdapter<String> mForecastAdapter;
+    private ArrayAdapter<String> mKidneyAdapter;
     private final Context mContext;
 
     public FetchKidneyTask(Context context) {
         mContext = context; //dlaczego przesyla sie context zamiast stringu?
+        //Toast.makeText(context, "fetchkidneytask utworzone", Toast.LENGTH_SHORT).show();
     }
 
     //test, czy zadziala
@@ -242,7 +244,7 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
                 cVVector.toArray(cvArray);
                 inserted = mContext.getContentResolver().bulkInsert(WeatherEntry.CONTENT_URI, cvArray);
             }
-
+            Toast.makeText(mContext, "co zostalo inserted: " + inserted, Toast.LENGTH_SHORT).show();
             Log.d(LOG_TAG, "FetchKidneyTask Complete. " + inserted + " Inserted");
 
         } catch (JSONException e) {
@@ -254,7 +256,7 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
     //params to jest to, co wpisze użytkownik np. butter
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected String[] doInBackground(String... params) {
 
         // If there's no zip code, there's nothing to look up.  Verify size of params.
         if (params.length == 0) {
@@ -293,6 +295,8 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
             final String MAX_PARAM = "cnt";
             final String OFFSET_PARAM = "offset"; //co to robi?
             final String APPID_PARAM = "APPID";
+
+            //Toast.makeText(mContext, "halo, budujesz to uri?", Toast.LENGTH_SHORT).show(); - crash
 
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                     .appendQueryParameter(FORMAT_PARAM, format)
@@ -359,6 +363,15 @@ public class FetchKidneyTask extends AsyncTask<String, Void, Void> {
 
     //czy to moze byc?
 
+    @Override
+    protected void onPostExecute(String[] result) {
+        if (result != null) {
+            mKidneyAdapter.clear();
+            for (String dayForecastStr : result) {
+                mKidneyAdapter.add(dayForecastStr);
+                Toast.makeText(mContext, "cos tu sie dzieje?", Toast.LENGTH_SHORT).show();
 
-
+            }
+        }
+    }
 }

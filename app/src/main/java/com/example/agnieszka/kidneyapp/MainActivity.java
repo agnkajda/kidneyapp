@@ -105,7 +105,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
-        } else {
+        } else
+//dziala to, luhuu!
+        {
             Intent intent = new Intent(this, DetailActivity.class)
                     .setData(contentUri);
             startActivity(intent);
