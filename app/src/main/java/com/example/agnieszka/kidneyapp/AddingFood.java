@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class AddingFood extends AppCompatActivity {
 
@@ -29,15 +32,24 @@ public class AddingFood extends AppCompatActivity {
         View.OnClickListener clicking = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //tu sie maja wydarzyć rzeczy
+                context = getApplicationContext();
+                Intent intent = new Intent(context, ChooseTheMeal.class);
+                startActivity(intent);
 
-                //FetchKidneyTask kidneyTask = new FetchKidneyTask(context); //musimy tu przesłać nazwę produktu - czemu context?
-                //kidneyTask.execute();
+                FetchKidneyTask kidneyTask = new FetchKidneyTask(context); //musimy tu przesłać nazwę produktu - czemu context?
+                kidneyTask.execute();
 
             }
 
         };
         clickToSearch.setOnClickListener(clicking);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
 }

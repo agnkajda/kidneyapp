@@ -34,5 +34,6 @@
         android:layout_alignLeft="@+id/search_for_food"
         android:layout_alignStart="@+id/search_for_food"
         android:backgroundTint="@color/kidney_blue" />
+    
 
 </RelativeLayout>
