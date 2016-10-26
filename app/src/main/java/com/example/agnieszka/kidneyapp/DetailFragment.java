@@ -1,5 +1,6 @@
 package com.example.agnieszka.kidneyapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -78,7 +79,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mWindView;
     private TextView mPressureView;
     Button addFood;
-
+    Context context;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -104,6 +105,22 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
         addFood = (Button) rootView.findViewById(R.id.add_food_button);
+
+        // działa dziadostwo
+        //zrobić nowa klasę
+
+
+        View.OnClickListener clicking = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context = getActivity().getApplicationContext();
+                //Intent intent = new Intent (context, TestActivity.class);
+                //startActivity(intent);
+            }
+
+        };
+        addFood.setOnClickListener(clicking);
+
         return rootView;
     }
 

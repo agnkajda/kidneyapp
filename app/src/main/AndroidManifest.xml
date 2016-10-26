@@ -72,14 +72,16 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <activity android:name=".AddingFood"
+        <activity
+            android:name=".AddingFood"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/ForecastTheme"/>
+            android:theme="@style/ForecastTheme" />
         <activity
             android:name=".ChooseTheMeal"
             android:label="@string/title_activity_choose_the_meal"
             android:parentActivityName=".AddingFood"
-            android:theme="@style/ForecastTheme"></activity>
+            android:theme="@style/ForecastTheme" />
+        <activity android:name=".TestActivity" />
     </application>
 
 </manifest>
