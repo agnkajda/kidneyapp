@@ -108,7 +108,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // działa dziadostwo
         //zrobić nowa klasę
-
+/*
 
         View.OnClickListener clicking = new View.OnClickListener() {
             @Override
@@ -120,7 +120,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         };
         addFood.setOnClickListener(clicking);
-
+*/
         return rootView;
     }
 
