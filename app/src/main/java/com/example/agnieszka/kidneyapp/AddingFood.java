@@ -46,39 +46,7 @@ final String string;
                 context = getApplicationContext();
                 String foodName = typeToSearch.toString();
 
-                //FetchKidneyTask kidneyTask = new FetchKidneyTask(context);
-                //kidneyTask.execute("fikimiki");
-
-                final String FORECAST_BASE_URL =
-                        "http://api.nal.usda.gov/ndb/search/?format=json&";
-                final String FORMAT_PARAM = "format"; // format to json - linia 293
-                final String QUERY_PARAM = "q";
-                final String SORT_PARAM = "sort"; //tylko co to jest ten sort?
-                final String MAX_PARAM = "cnt";
-                final String OFFSET_PARAM = "offset"; //co to robi?
-                final String APPID_PARAM = "APPID";
-
-                String forecastJsonStr = null;
-
-                String format = "json";
-                String units = "metric";
-                String sort = "n";
-                int numDays = 14;
-                int maxPositions = 5;
-                int offset = 0;
-
-                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                        .appendQueryParameter(FORMAT_PARAM, format)
-                        .appendQueryParameter(QUERY_PARAM, foodName) //to jest ta nazwa wpisana
-                        .appendQueryParameter(SORT_PARAM, sort)
-                        .appendQueryParameter(MAX_PARAM, Integer.toString(maxPositions))
-                        .appendQueryParameter(OFFSET_PARAM, Integer.toString(offset))
-                        .appendQueryParameter(APPID_PARAM, BuildConfig.NDB_API_KEY)
-                        .build();
-
-                Toast.makeText(context, foodName, Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(context, ChooseTheMeal.class);
+                Intent intent = new Intent(context, TestActivity.class);
                 startActivity(intent);
             }
         };

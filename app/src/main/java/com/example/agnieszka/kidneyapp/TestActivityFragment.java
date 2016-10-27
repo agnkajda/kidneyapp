@@ -65,7 +65,7 @@ public class TestActivityFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             FetchTask weatherTask = new FetchTask();
-            weatherTask.execute("94043");
+            weatherTask.execute("juice");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -142,19 +142,20 @@ public class TestActivityFragment extends Fragment {
         }
 
 
-        private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
+        private String[] getWeatherDataFromJson(String forecastJsonStr, int maxPositions)
                 throws JSONException {
 
             // These are the names of the JSON objects that need to be extracted.
-            final String OWM_LIST = "list";
-            final String OWM_WEATHER = "weather";
-            final String OWM_TEMPERATURE = "temp";
-            final String OWM_MAX = "max";
-            final String OWM_MIN = "min";
-            final String OWM_DESCRIPTION = "main";
+
+            final String NDB_LIST = "list";
+            final String NDB_NDBNO = "ndbno";
+            final String NDB_NAME = "name";
+
+            final String NDB_ITEM = "item";
 
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
-            JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
+            JSONObject item = forecastJson.getJSONObject(NDB_LIST);
+            JSONArray weatherArray = item.getJSONArray(NDB_ITEM);
 
             // OWM returns daily forecasts based upon the local time of the city that is being
             // asked for, which means that we need to know the GMT offset to translate this data
@@ -173,15 +174,26 @@ public class TestActivityFragment extends Fragment {
             // now we work exclusively in UTC
             dayTime = new Time();
 
-            String[] resultStrs = new String[numDays];
+            String[] resultStrs = new String[maxPositions];
             for(int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String day;
                 String description;
                 String highAndLow;
 
-                // Get the JSON object representing the day
-                JSONObject dayForecast = weatherArray.getJSONObject(i);
+
+                JSONObject foodValues = weatherArray.getJSONObject(i);
+
+
+                int number = foodValues.getInt(NDB_NDBNO);
+                String foodName = foodValues.getString(NDB_NAME);
+
+/*
+                JSONObject listJson = forecastJson.getJSONObject(NDB_LIST);
+                JSONObject itemJson = listJson.getJSONObject(NDB_ITEM);
+                String itemName = itemJson.getString(NDB_NAME);
+                String itemNdbno = itemJson.getString(NDB_NDBNO);
+*/
 
                 // The date/time is returned as a long.  We need to convert that
                 // into something human-readable, since most people won't read "1400356800" as
@@ -192,17 +204,18 @@ public class TestActivityFragment extends Fragment {
                 day = getReadableDateString(dateTime);
 
                 // description is in a child array called "weather", which is 1 element long.
-                JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
-                description = weatherObject.getString(OWM_DESCRIPTION);
+                //JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
+                //description = weatherObject.getString(OWM_DESCRIPTION);
 
                 // Temperatures are in a child object called "temp".  Try not to name variables
                 // "temp" when working with temperature.  It confuses everybody.
-                JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
-                double high = temperatureObject.getDouble(OWM_MAX);
-                double low = temperatureObject.getDouble(OWM_MIN);
+                //JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
+                //double high = temperatureObject.getDouble(OWM_MAX);
+                //double low = temperatureObject.getDouble(OWM_MIN);
 
-                highAndLow = formatHighLows(high, low);
-                resultStrs[i] = day + " - " + description + " - " + highAndLow;
+               // highAndLow = formatHighLows(high, low);
+                //resultStrs[i] = day + " - " + description + " - " + highAndLow;
+                resultStrs[i] = foodName + " - " + number;
             }
             for (String s : resultStrs) {
                 Log.v(LOG_TAG, "Forecast entry: " + s);
@@ -228,26 +241,31 @@ public class TestActivityFragment extends Fragment {
 
             String format = "json";
             String units = "metric";
-            int numDays = 7;
+            String sort = "r";
+            int maxPositions = 20;
+            int offset = 0;
 
             try {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
+
                 final String FORECAST_BASE_URL =
-                        "http://api.openweathermap.org/data/2.5/forecast/daily?";
+                        "http://api.nal.usda.gov/ndb/search/?";
+                final String FORMAT_PARAM = "format"; // format to json
                 final String QUERY_PARAM = "q";
-                final String FORMAT_PARAM = "mode";
-                final String UNITS_PARAM = "units";
-                final String DAYS_PARAM = "cnt";
-                final String APPID_PARAM = "APPID";
+                final String SORT_PARAM = "sort"; //tylko co to jest ten sort?
+                final String MAX_PARAM = "max";
+                final String OFFSET_PARAM = "offset";
+                final String APPID_PARAM = "api_key";
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                        .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, format)
-                        .appendQueryParameter(UNITS_PARAM, units)
-                        .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
-                        .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY)
+                        .appendQueryParameter(QUERY_PARAM, params[0]) //to jest ta nazwa wpisana
+                        .appendQueryParameter(SORT_PARAM, sort)
+                        .appendQueryParameter(MAX_PARAM, Integer.toString(maxPositions))
+                        .appendQueryParameter(OFFSET_PARAM, Integer.toString(offset))
+                        .appendQueryParameter(APPID_PARAM, BuildConfig.NDB_API_KEY)
                         .build();
 
                 URL url = new URL(builtUri.toString());
@@ -301,7 +319,7 @@ public class TestActivityFragment extends Fragment {
             }
 
             try {
-                return getWeatherDataFromJson(forecastJsonStr, numDays);
+                return getWeatherDataFromJson(forecastJsonStr, maxPositions);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();

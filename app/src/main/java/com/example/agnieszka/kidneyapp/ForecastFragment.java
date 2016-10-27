@@ -145,7 +145,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void onClick(View view) {
                 context = getActivity().getApplicationContext();
-                Intent intent = new Intent (context, TestActivity.class);
+                Intent intent = new Intent (context, AddingFood.class);
                 startActivity(intent);
             }
 
