@@ -76,12 +76,18 @@
             android:name=".AddingFood"
             android:parentActivityName=".MainActivity"
             android:theme="@style/ForecastTheme" />
+
+        <activity
+            android:name=".TestActivity"
+            android:parentActivityName=".AddingFood"
+            android:theme="@style/ForecastTheme" />
+
         <activity
             android:name=".ChooseTheMeal"
             android:label="@string/title_activity_choose_the_meal"
-            android:parentActivityName=".AddingFood"
+            android:parentActivityName=".TestActivity"
             android:theme="@style/ForecastTheme" />
-        <activity android:name=".TestActivity" />
+
     </application>
 
 </manifest>

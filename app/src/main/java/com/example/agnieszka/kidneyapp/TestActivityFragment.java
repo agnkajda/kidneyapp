@@ -109,7 +109,7 @@ public class TestActivityFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String forecast = mForecastAdapter2.getItem(position);
-                Intent intent = new Intent(getActivity(), DetailActivity.class)
+                Intent intent = new Intent(getActivity(), ChooseTheMeal.class)
                         .putExtra(Intent.EXTRA_TEXT, forecast);
                 startActivity(intent);
             }
