@@ -1,12 +1,10 @@
 package com.example.agnieszka.kidneyapp;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -34,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import android.content.Intent;
 
 
 public class TestActivityFragment extends Fragment {
@@ -54,7 +53,6 @@ public class TestActivityFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.testfragment, menu);
-
     }
 
     @Override
@@ -64,8 +62,16 @@ public class TestActivityFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
+            String food;
+            Intent intent = getActivity().getIntent();
+            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+                food = intent.getStringExtra(Intent.EXTRA_TEXT);
+            }
+            else {
+                food = "juice";
+            }
             FetchTask weatherTask = new FetchTask();
-            weatherTask.execute("juice");
+            weatherTask.execute(food);
             return true;
         }
         return super.onOptionsItemSelected(item);

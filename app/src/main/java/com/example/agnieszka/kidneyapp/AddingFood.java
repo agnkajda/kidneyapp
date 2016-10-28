@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class AddingFood extends AppCompatActivity {
 
         clickToSearch = (Button) findViewById(R.id.search_button);
         typeToSearch = (EditText) findViewById(R.id.search_for_food);
-final String string;
+
 
         //setHasOptionsMenu(true);
 
@@ -44,9 +45,12 @@ final String string;
             @Override
             public void onClick(View view) {
                 context = getApplicationContext();
-                String foodName = typeToSearch.toString();
+                String foodName = typeToSearch.getText().toString();
 
-                Intent intent = new Intent(context, TestActivity.class);
+                Intent intent = new Intent(context, TestActivity.class)
+                .putExtra(Intent.EXTRA_TEXT, foodName);
+                Toast.makeText(context, "co zostalo inserted: " + foodName, Toast.LENGTH_SHORT).show();
+                Log.d("LOG", "Co tu się kryje? " + foodName + " <- To.");
                 startActivity(intent);
             }
         };

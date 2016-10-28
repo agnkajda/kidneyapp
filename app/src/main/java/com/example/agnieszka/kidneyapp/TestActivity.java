@@ -12,6 +12,9 @@ public class TestActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
         if (savedInstanceState == null) {
+
+
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new TestActivityFragment())
                     .commit();
