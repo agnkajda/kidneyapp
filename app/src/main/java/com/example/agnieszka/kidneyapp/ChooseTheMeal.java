@@ -1,5 +1,6 @@
 package com.example.agnieszka.kidneyapp;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +63,41 @@ public class ChooseTheMeal extends AppCompatActivity {
         }
 
         @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // Add this line in order for this fragment to handle menu events.
+            setHasOptionsMenu(true);
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.testfragment, menu);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            // Handle action bar item clicks here. The action bar will
+            // automatically handle clicks on the Home/Up button, so long
+            // as you specify a parent activity in AndroidManifest.xml.
+            int id = item.getItemId();
+            if (id == R.id.action_refresh) {
+                // TODO - uzupełnić, co się stanie po odświeżeniu
+                /*String food;
+                Intent intent = getActivity().getIntent();
+                if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+                    food = intent.getStringExtra(Intent.EXTRA_TEXT);
+                }
+                else {
+                    food = "juice";
+                }
+                //FetchTask weatherTask = new FetchTask();
+                //weatherTask.execute(food);
+                return true;*/
+            }
+            return super.onOptionsItemSelected(item);
+        }
+        
+        @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
@@ -70,12 +107,35 @@ public class ChooseTheMeal extends AppCompatActivity {
             Intent intent = getActivity().getIntent();
             if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
                 String forecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-                ((TextView) rootView.findViewById(R.id.detail_text))
+                ((TextView) rootView.findViewById(R.id.values_text))
                         .setText(forecastStr);
             }
 
             return rootView;
         }
+
+        public class FetchValuesTask extends AsyncTask<String, Void, String[]> {
+            final String NDB_NDBNO = "ndbno";
+
+            @Override
+            protected String[] doInBackground(String... params) {
+
+                if (params.length == 0) {
+                    return null;
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String[] result) {
+                if (result != null) {
+
+                }
+            }
+        }
+
+
     }
 
 }
