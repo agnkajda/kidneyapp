@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -32,6 +33,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ChooseTheMeal extends AppCompatActivity {
 
@@ -69,12 +72,11 @@ public class ChooseTheMeal extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
+    
     public static class ChooseTheMealFragment extends Fragment {
 
-        //private ArrayAdapter<String> mFood;
-        private ArrayList<String> mFood = new ArrayList<String>();
+        private ArrayAdapter<String> mFood;
+        //private ArrayList<String> mFood = new ArrayList<String>();
 
         public ChooseTheMealFragment() {
         }
@@ -119,7 +121,25 @@ public class ChooseTheMeal extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
+            String[] data = {
+                    "water",
+                    "energy",
+                    "sodium"
+            };
+
+            List<String> foodValues = new ArrayList<String>(Arrays.asList(data));
+
+            mFood =
+                    new ArrayAdapter<String>(
+                            getActivity(), // The current context (this activity)
+                            R.layout.list_item_forecast_3, // The name of the layout ID.
+                            R.id.list_item_forecast_textview_3, // The ID of the textview to populate.
+                            foodValues);
+
             View rootView = inflater.inflate(R.layout.activity_choose_the_meal_fragment, container, false);
+
+            ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast_3);
+            listView.setAdapter(mFood);
 
             // The detail Activity called via intent.  Inspect the intent for forecast data.
             Intent intent = getActivity().getIntent();
@@ -275,7 +295,7 @@ public class ChooseTheMeal extends AppCompatActivity {
             @Override
             protected void onPostExecute(String[] result) {
                 if (result != null) {
-                    //mFood.clear();
+                    mFood.clear();
                     for (String dayForecastStr : result) {
                         mFood.add(dayForecastStr);
                         Log.d("My array list content: ", dayForecastStr);                    }
