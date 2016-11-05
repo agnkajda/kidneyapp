@@ -35,6 +35,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class ChooseTheMeal extends AppCompatActivity {
 
@@ -72,7 +73,7 @@ public class ChooseTheMeal extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    
+
     public static class ChooseTheMealFragment extends Fragment {
 
         private ArrayAdapter<String> mFood;
@@ -122,9 +123,7 @@ public class ChooseTheMeal extends AppCompatActivity {
                                  Bundle savedInstanceState) {
 
             String[] data = {
-                    "water",
-                    "energy",
-                    "sodium"
+                    "Data is being loaded"
             };
 
             List<String> foodValues = new ArrayList<String>(Arrays.asList(data));
@@ -151,6 +150,32 @@ public class ChooseTheMeal extends AppCompatActivity {
 
             return rootView;
         }
+
+        private void updateFetchingValuesData() {
+            String numberNDBO;
+            Intent intent = getActivity().getIntent();
+                if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+                    numberNDBO = intent.getStringExtra(Intent.EXTRA_TEXT);
+                    StringTokenizer tokens = new StringTokenizer(numberNDBO, "|");
+                    String firstPart = tokens.nextToken();
+                    numberNDBO = tokens.nextToken();
+                    numberNDBO = numberNDBO.trim();
+                }
+                else {
+                    numberNDBO = "01009";
+                }
+            //numberNDBO = "01009";
+
+            FetchValuesTask foodTask = new FetchValuesTask();
+            foodTask.execute(numberNDBO);
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            updateFetchingValuesData();
+        }
+
 
         public class FetchValuesTask extends AsyncTask<String, Void, String[]> {
 

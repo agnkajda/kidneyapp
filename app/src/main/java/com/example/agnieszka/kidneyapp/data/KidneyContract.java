@@ -55,5 +55,19 @@ public class KidneyContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_VALUES;
 
+        public static final String TABLE_NAME = "values";
+
+        public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_KCAL = "kcal";
+        public static final String COLUMN_CARBON = "carbon";
+        public static final String COLUMN_FAT = "fat";
+        public static final String COLUMN_PROTEIN = "protein";
+        public static final String COLUMN_PHOSPHORUS= "phosphorus";
+        public static final String COLUMN_SODIUM = "sodium";
+        public static final String COLUMN_POTASSIUM= "potassium";
+        public static final String COLUMN_FLUID = "fluid";
+        public static final String COLUMN_IF_DIALYZED = "dialyzed";
+
+
     }
 }

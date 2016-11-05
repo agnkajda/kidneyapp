@@ -85,13 +85,7 @@ public class TestActivityFragment extends Fragment {
 
         // Create some dummy data for the ListView.  Here's a sample weekly forecast
         String[] data = {
-                "Mon 6/23 - Sunny - 31/17",
-                "Tue 6/24 - Foggy - 21/8",
-                "Wed 6/25 - Cloudy - 22/17",
-                "Thurs 6/26 - Rainy - 18/11",
-                "Fri 6/27 - Foggy - 21/10",
-                "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
-                "Sun 6/29 - Sunny - 20/7"
+                "Data is loading"
         };
         List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
 
@@ -126,6 +120,25 @@ public class TestActivityFragment extends Fragment {
 
         return rootView;
     }
+
+    private void updateSearchingForFood() {
+        String food;
+        Intent intent = getActivity().getIntent();
+        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+            food = intent.getStringExtra(Intent.EXTRA_TEXT);
+        }
+        else {
+            food = "juice";
+        }
+        FetchTask weatherTask = new FetchTask();
+        weatherTask.execute(food);
+        }
+
+    @Override
+    public void onStart() {
+       super.onStart();
+        updateSearchingForFood();
+        }
 
     public class FetchTask extends AsyncTask<String, Void, String[]> {
 
@@ -223,7 +236,7 @@ public class TestActivityFragment extends Fragment {
 
                // highAndLow = formatHighLows(high, low);
                 //resultStrs[i] = day + " - " + description + " - " + highAndLow;
-                resultStrs[i] = foodName + " - " + number;
+                resultStrs[i] = foodName + " | " + number;
             }
             for (String s : resultStrs) {
                 Log.v(LOG_TAG, "Forecast entry: " + s);
