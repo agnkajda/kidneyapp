@@ -25,8 +25,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.test.AndroidTestCase;
 
-import com.example.agnieszka.kidneyapp.data.WeatherContract.LocationEntry;
-import com.example.agnieszka.kidneyapp.data.WeatherContract.WeatherEntry;
+import com.example.agnieszka.kidneyapp.data.KidneyContract.ValuesEntry;
+import com.example.agnieszka.kidneyapp.data.KidneyContract.JournalEntry;
 
 /*
     Note: This is not a complete set of tests of the Sunshine ContentProvider, but it does test
@@ -50,18 +50,18 @@ public class TestProvider extends AndroidTestCase {
      */
     public void deleteAllRecordsFromProvider() {
         mContext.getContentResolver().delete(
-                WeatherEntry.CONTENT_URI,
+                JournalEntry.CONTENT_URI,
                 null,
                 null
         );
         mContext.getContentResolver().delete(
-                LocationEntry.CONTENT_URI,
+                ValuesEntry.CONTENT_URI,
                 null,
                 null
         );
 
         Cursor cursor = mContext.getContentResolver().query(
-                WeatherEntry.CONTENT_URI,
+                JournalEntry.CONTENT_URI,
                 null,
                 null,
                 null,
@@ -71,7 +71,7 @@ public class TestProvider extends AndroidTestCase {
         cursor.close();
 
         cursor = mContext.getContentResolver().query(
-                LocationEntry.CONTENT_URI,
+                ValuesEntry.CONTENT_URI,
                 null,
                 null,
                 null,
@@ -90,8 +90,8 @@ public class TestProvider extends AndroidTestCase {
         WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        db.delete(WeatherEntry.TABLE_NAME, null, null);
-        db.delete(LocationEntry.TABLE_NAME, null, null);
+        db.delete(JournalEntry.TABLE_NAME, null, null);
+        db.delete(ValuesEntry.TABLE_NAME, null, null);
         db.close();
     }
 
@@ -121,7 +121,7 @@ public class TestProvider extends AndroidTestCase {
         // We define the component name based on the package name from the context and the
         // WeatherProvider class.
         ComponentName componentName = new ComponentName(mContext.getPackageName(),
-                WeatherProvider.class.getName());
+                KidneyProvider.class.getName());
         try {
             // Fetch the provider info using the component name from the PackageManager
             // This throws an exception if the provider isn't registered.
@@ -129,8 +129,8 @@ public class TestProvider extends AndroidTestCase {
 
             // Make sure that the registered authority matches the authority from the Contract.
             assertEquals("Error: WeatherProvider registered with authority: " + providerInfo.authority +
-                    " instead of authority: " + WeatherContract.CONTENT_AUTHORITY,
-                    providerInfo.authority, WeatherContract.CONTENT_AUTHORITY);
+                    " instead of authority: " + KidneyContract.CONTENT_AUTHORITY,
+                    providerInfo.authority, KidneyContract.CONTENT_AUTHORITY);
         } catch (PackageManager.NameNotFoundException e) {
             // I guess the provider isn't registered correctly.
             assertTrue("Error: WeatherProvider not registered at " + mContext.getPackageName(),
@@ -146,32 +146,27 @@ public class TestProvider extends AndroidTestCase {
          */
     public void testGetType() {
         // content://com.example.agnieszka.kidneyapp/weather/
-        String type = mContext.getContentResolver().getType(WeatherEntry.CONTENT_URI);
+        String type = mContext.getContentResolver().getType(JournalEntry.CONTENT_URI);
         // vnd.android.cursor.dir/com.example.agnieszka.kidneyapp/weather
         assertEquals("Error: the WeatherEntry CONTENT_URI should return WeatherEntry.CONTENT_TYPE",
-                WeatherEntry.CONTENT_TYPE, type);
-
-        String testLocation = "94074";
-        // content://com.example.agnieszka.kidneyapp/weather/94074
-        type = mContext.getContentResolver().getType(
-                WeatherEntry.buildWeatherLocation(testLocation));
-        // vnd.android.cursor.dir/com.example.agnieszka.kidneyapp/weather
-        assertEquals("Error: the WeatherEntry CONTENT_URI with location should return WeatherEntry.CONTENT_TYPE",
-                WeatherEntry.CONTENT_TYPE, type);
+                JournalEntry.CONTENT_TYPE, type);
 
         long testDate = 1419120000L; // December 21st, 2014
+        // content://com.example.agnieszka.kidneyapp/weather/94074
+        type = mContext.getContentResolver().getType(
+                JournalEntry.buildJournalWithDate(testDate));
+        // vnd.android.cursor.dir/com.example.agnieszka.kidneyapp/weather
+        assertEquals("Error: the WeatherEntry CONTENT_URI with location should return WeatherEntry.CONTENT_TYPE",
+                JournalEntry.CONTENT_TYPE, type);
+
+
         // content://com.example.agnieszka.kidneyapp/weather/94074/20140612
         type = mContext.getContentResolver().getType(
-                WeatherEntry.buildWeatherLocationWithDate(testLocation, testDate));
+                ValuesEntry.buildValuesWithDate(testDate));
         // vnd.android.cursor.item/com.example.agnieszka.kidneyapp/weather/1419120000
         assertEquals("Error: the WeatherEntry CONTENT_URI with location and date should return WeatherEntry.CONTENT_ITEM_TYPE",
-                WeatherEntry.CONTENT_ITEM_TYPE, type);
+                ValuesEntry.CONTENT_ITEM_TYPE, type);
 
-        // content://com.example.agnieszka.kidneyapp/location/
-        type = mContext.getContentResolver().getType(LocationEntry.CONTENT_URI);
-        // vnd.android.cursor.dir/com.example.agnieszka.kidneyapp/location
-        assertEquals("Error: the LocationEntry CONTENT_URI should return LocationEntry.CONTENT_TYPE",
-                LocationEntry.CONTENT_TYPE, type);
     }
 
 
@@ -180,9 +175,9 @@ public class TestProvider extends AndroidTestCase {
         read out the data.  Uncomment this test to see if the basic weather query functionality
         given in the ContentProvider is working correctly.
      */
-    public void testBasicWeatherQuery() {
+    public void testBasicKidneyQuery() {
         // insert our test records into the database
-        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
+        KidneyDbHelper dbHelper = new KidneyDbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
@@ -191,14 +186,14 @@ public class TestProvider extends AndroidTestCase {
         // Fantastic.  Now that we have a location, add some weather!
         ContentValues weatherValues = TestUtilities.createWeatherValues(locationRowId);
 
-        long weatherRowId = db.insert(WeatherEntry.TABLE_NAME, null, weatherValues);
+        long weatherRowId = db.insert(JournalEntry.TABLE_NAME, null, weatherValues);
         assertTrue("Unable to Insert WeatherEntry into the Database", weatherRowId != -1);
 
         db.close();
 
         // Test the basic content provider query
         Cursor weatherCursor = mContext.getContentResolver().query(
-                WeatherEntry.CONTENT_URI,
+                JournalEntry.CONTENT_URI,
                 null,
                 null,
                 null,
@@ -309,8 +304,8 @@ public class TestProvider extends AndroidTestCase {
 
         // Register a content observer for our insert.  This time, directly with the content resolver
         TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
-        mContext.getContentResolver().registerContentObserver(LocationEntry.CONTENT_URI, true, tco);
-        Uri locationUri = mContext.getContentResolver().insert(LocationEntry.CONTENT_URI, testValues);
+        mContext.getContentResolver().registerContentObserver(ValuesEntry.CONTENT_URI, true, tco);
+        Uri locationUri = mContext.getContentResolver().insert(ValuesEntry.CONTENT_URI, testValues);
 
         // Did our content observer get called?  Students:  If this fails, your insert location
         // isn't calling getContext().getContentResolver().notifyChange(uri, null);
@@ -327,7 +322,7 @@ public class TestProvider extends AndroidTestCase {
 
         // A cursor is your primary interface to the query results.
         Cursor cursor = mContext.getContentResolver().query(
-                LocationEntry.CONTENT_URI,
+                ValuesEntry.CONTENT_URI,
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
                 null, // values for "where" clause
@@ -342,10 +337,10 @@ public class TestProvider extends AndroidTestCase {
         // The TestContentObserver is a one-shot class
         tco = TestUtilities.getTestContentObserver();
 
-        mContext.getContentResolver().registerContentObserver(WeatherEntry.CONTENT_URI, true, tco);
+        mContext.getContentResolver().registerContentObserver(JournalEntry.CONTENT_URI, true, tco);
 
         Uri weatherInsertUri = mContext.getContentResolver()
-                .insert(WeatherEntry.CONTENT_URI, weatherValues);
+                .insert(JournalEntry.CONTENT_URI, weatherValues);
         assertTrue(weatherInsertUri != null);
 
         // Did our content observer get called?  Students:  If this fails, your insert weather
@@ -356,13 +351,13 @@ public class TestProvider extends AndroidTestCase {
 
         // A cursor is your primary interface to the query results.
         Cursor weatherCursor = mContext.getContentResolver().query(
-                WeatherEntry.CONTENT_URI,  // Table to Query
+                JournalEntry.CONTENT_URI,  // Table to Query
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
                 null, // values for "where" clause
                 null // columns to group by
         );
-
+/*
         TestUtilities.validateCursor("testInsertReadProvider. Error validating WeatherEntry insert.",
                 weatherCursor, weatherValues);
 
@@ -372,7 +367,7 @@ public class TestProvider extends AndroidTestCase {
 
         // Get the joined Weather and Location data
         weatherCursor = mContext.getContentResolver().query(
-                WeatherEntry.buildWeatherLocation(TestUtilities.TEST_LOCATION),
+                JournalEntry.buildJournalUri(TestUtilities.TEST_LOCATION),
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
                 null, // values for "where" clause
@@ -401,6 +396,7 @@ public class TestProvider extends AndroidTestCase {
                 null,
                 null
         );
+        */
         TestUtilities.validateCursor("testInsertReadProvider.  Error validating joined Weather and Location data for a specific date.",
                 weatherCursor, weatherValues);
     }
@@ -415,11 +411,11 @@ public class TestProvider extends AndroidTestCase {
 
         // Register a content observer for our location delete.
         TestUtilities.TestContentObserver locationObserver = TestUtilities.getTestContentObserver();
-        mContext.getContentResolver().registerContentObserver(LocationEntry.CONTENT_URI, true, locationObserver);
+        mContext.getContentResolver().registerContentObserver(JournalEntry.CONTENT_URI, true, locationObserver);
 
         // Register a content observer for our weather delete.
         TestUtilities.TestContentObserver weatherObserver = TestUtilities.getTestContentObserver();
-        mContext.getContentResolver().registerContentObserver(WeatherEntry.CONTENT_URI, true, weatherObserver);
+        mContext.getContentResolver().registerContentObserver(JournalEntry.CONTENT_URI, true, weatherObserver);
 
         deleteAllRecordsFromProvider();
 
@@ -461,7 +457,7 @@ public class TestProvider extends AndroidTestCase {
     public void testBulkInsert() {
         // first, let's create a location value
         ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
-        Uri locationUri = mContext.getContentResolver().insert(LocationEntry.CONTENT_URI, testValues);
+        Uri locationUri = mContext.getContentResolver().insert(ValuesEntry.CONTENT_URI, testValues);
         long locationRowId = ContentUris.parseId(locationUri);
 
         // Verify we got a row back.
@@ -472,7 +468,7 @@ public class TestProvider extends AndroidTestCase {
 
         // A cursor is your primary interface to the query results.
         Cursor cursor = mContext.getContentResolver().query(
-                LocationEntry.CONTENT_URI,
+                ValuesEntry.CONTENT_URI,
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
                 null, // values for "where" clause
@@ -489,9 +485,9 @@ public class TestProvider extends AndroidTestCase {
 
         // Register a content observer for our bulk insert.
         TestUtilities.TestContentObserver weatherObserver = TestUtilities.getTestContentObserver();
-        mContext.getContentResolver().registerContentObserver(WeatherEntry.CONTENT_URI, true, weatherObserver);
+        mContext.getContentResolver().registerContentObserver(JournalEntry.CONTENT_URI, true, weatherObserver);
 
-        int insertCount = mContext.getContentResolver().bulkInsert(WeatherEntry.CONTENT_URI, bulkInsertContentValues);
+        int insertCount = mContext.getContentResolver().bulkInsert(JournalEntry.CONTENT_URI, bulkInsertContentValues);
 
         // Students:  If this fails, it means that you most-likely are not calling the
         // getContext().getContentResolver().notifyChange(uri, null); in your BulkInsert
@@ -503,11 +499,11 @@ public class TestProvider extends AndroidTestCase {
 
         // A cursor is your primary interface to the query results.
         cursor = mContext.getContentResolver().query(
-                WeatherEntry.CONTENT_URI,
+                JournalEntry.CONTENT_URI,
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
                 null, // values for "where" clause
-                WeatherEntry.COLUMN_DATE + " ASC"  // sort order == by DATE ASCENDING
+                JournalEntry.COLUMN_DATE + " ASC"  // sort order == by DATE ASCENDING
         );
 
         // we should have as many records in the database as we've inserted

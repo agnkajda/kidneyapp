@@ -48,6 +48,12 @@
             android:exported="false"
             android:syncable="true" />
 
+        <provider
+            android:name=".data.KidneyProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false"
+            android:syncable="true" /> <!--TODO: czy tu mogą być dwa providery? -->
+
         <!-- SyncAdapter's dummy authentication service -->
         <service android:name=".sync.KidneyAuthenticatorService">
             <intent-filter>

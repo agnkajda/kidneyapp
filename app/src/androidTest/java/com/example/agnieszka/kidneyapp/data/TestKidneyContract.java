@@ -22,24 +22,36 @@ import android.test.AndroidTestCase;
     Students: This is NOT a complete test for the WeatherContract --- just for the functions
     that we expect you to write.
  */
-public class TestWeatherContract extends AndroidTestCase {
+public class TestKidneyContract extends AndroidTestCase {
 
     // intentionally includes a slash to make sure Uri is getting quoted correctly
-    private static final String TEST_WEATHER_LOCATION = "/North Pole";
-    private static final long TEST_WEATHER_DATE = 1419033600L;  // December 20th, 2014
+    private static final long TEST_KIDNEY_JOURNAL = 0;
+    private static final long TEST_KIDNEY_DATE = 1419033600L;  // December 20th, 2014
 
     /*
         Students: Uncomment this out to test your weather location function.
      */
     public void testBuildWeatherLocation() {
-        Uri locationUri = WeatherContract.WeatherEntry.buildWeatherLocation(TEST_WEATHER_LOCATION);
+        Uri journalUri = KidneyContract.JournalEntry.buildJournalUri(TEST_KIDNEY_JOURNAL);
         assertNotNull("Error: Null Uri returned.  You must fill-in buildWeatherLocation in " +
                         "WeatherContract.",
-                locationUri);
+                journalUri);
         assertEquals("Error: Weather location not properly appended to the end of the Uri",
-                TEST_WEATHER_LOCATION, locationUri.getLastPathSegment());
+                TEST_KIDNEY_JOURNAL, journalUri.getLastPathSegment());
         assertEquals("Error: Weather location Uri doesn't match our expected result",
-                locationUri.toString(),
-                "content://com.example.agnieszka.kidneyapp/weather/%2FNorth%20Pole");
+                journalUri.toString(),
+                "content://com.example.agnieszka.kidneyapp/journal/%2FNorth%20Pole");
+    }
+
+    public void testBuildJournalDate() {
+        Uri journalUri = KidneyContract.JournalEntry.buildJournalWithDate(TEST_KIDNEY_DATE);
+        assertNotNull("Error: Null Uri returned.  You must fill-in buildWeatherLocation in " +
+                        "WeatherContract.",
+                journalUri);
+        assertEquals("Error: Weather location not properly appended to the end of the Uri",
+                TEST_KIDNEY_DATE, journalUri.getLastPathSegment());
+        assertEquals("Error: Weather location Uri doesn't match our expected result",
+                journalUri.toString(),
+                "content://com.example.agnieszka.kidneyapp/journal/1419033600");
     }
 }

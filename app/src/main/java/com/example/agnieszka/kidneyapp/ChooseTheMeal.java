@@ -77,7 +77,6 @@ public class ChooseTheMeal extends AppCompatActivity {
     public static class ChooseTheMealFragment extends Fragment {
 
         private ArrayAdapter<String> mFood;
-        //private ArrayList<String> mFood = new ArrayList<String>();
 
         public ChooseTheMealFragment() {
         }
