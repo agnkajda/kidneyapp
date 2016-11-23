@@ -1,5 +1,6 @@
 package com.example.agnieszka.kidneyapp;
 
+import android.content.ContentValues;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,10 +34,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Vector;
+
+import com.example.agnieszka.kidneyapp.data.KidneyContract;
+import com.example.agnieszka.kidneyapp.data.KidneyContract.ValuesEntry;
 
 public class ChooseTheMeal extends AppCompatActivity {
 
@@ -180,6 +188,36 @@ public class ChooseTheMeal extends AppCompatActivity {
 
             private final String LOG_TAG = TestActivityFragment.FetchTask.class.getSimpleName();
 
+            //można tu walnąć konstruktor i wtedy przenieść do innego pliku tę całą klasę
+
+            private boolean DEBUG = true;
+
+
+            private String getReadableDateString(long time){
+                // Because the API returns a unix timestamp (measured in seconds),
+                // it must be converted to milliseconds in order to be converted to valid date.
+                Date date = new Date(time);
+                SimpleDateFormat format = new SimpleDateFormat("E, MMM d");
+                return format.format(date).toString();
+            }
+
+            //jakaś funkcja konwertująca, żeby program działał tymczasowo (bo na razie nie powinien działać po zmianach)
+
+
+            String[] convertContentValuesToUXFormat(Vector<ContentValues> cvv) {
+                // return strings to keep UI functional for now
+                String[] resultStrs = new String[cvv.size()];
+                for ( int i = 0; i < cvv.size(); i++ ) {
+                    ContentValues weatherValues = cvv.elementAt(i);
+                    resultStrs[i] = getReadableDateString(
+                            weatherValues.getAsLong(KidneyContract.ValuesEntry.COLUMN_DATE)) +
+                            " - " + weatherValues.getAsString(KidneyContract.ValuesEntry.COLUMN_KCAL);
+                }
+                return resultStrs;
+            }
+
+
+
             private String[] getValuesFromJson(String foodJsonStr, int maxPositions)
                     throws JSONException {
 
@@ -188,32 +226,133 @@ public class ChooseTheMeal extends AppCompatActivity {
                 final String NDB_NUTRIENTS = "nutrients";
                 final String NDB_VALUE = "value";
                 final String NDB_NAME = "name";
+                final String NDB_ID = "nutrient_id";
 
-                final String water = "255";
-                final String energy = "208";
-                final String carbohydrate = "205";
-                final String protein = "203";
-                final String fat = "204";
-                final String magnesium = "304";
-                final String phosphorus = "305";
-                final String potasium = "306";
-                final String sodium = "307";
+                final int water = 255;
+                final int energy = 208;
+                final int carbohydrate = 205;
+                final int protein = 203;
+                final int fat = 204;
+                final int magnesium = 304;
+                final int phosphorus = 305;
+                final int potassium = 306;
+                final int sodium = 307;
+
+                try{
 
                 JSONObject foodJson = new JSONObject(foodJsonStr);
                 JSONObject report = foodJson.getJSONObject(NDB_REPORT);
                 JSONObject food = report.getJSONObject(NDB_FOOD);
                 JSONArray nutrientsArray = food.getJSONArray(NDB_NUTRIENTS);
 
+                Vector<ContentValues> cVVector = new Vector<ContentValues>(nutrientsArray.length());
+
+                Time dayTime = new Time();
+                dayTime.setToNow();
+
+                // we start at the day returned by local time. Otherwise this is a mess.
+                int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
+
+                // now we work exclusively in UTC
+                dayTime = new Time();
+
                 maxPositions = nutrientsArray.length();
                 String[] resultStrs = new String[maxPositions];
 
+                ContentValues kidneyValues = new ContentValues();
+
+                long dateTime;
+
+                // Cheating to convert this to UTC time, which is what we want anyhow
+                dateTime = dayTime.setJulianDay(julianStartDay);
+
+                kidneyValues.put(ValuesEntry.COLUMN_DATE, dateTime);
+
+
                 for (int i = 0; i < nutrientsArray.length(); i++) {
+
+
+                    String type;
+                    double value;
+                    int nutrientId;
+
                     JSONObject foodValues = nutrientsArray.getJSONObject(i);
-                    String type = foodValues.getString(NDB_NAME);
-                    String value = foodValues.getString(NDB_VALUE);
-                    resultStrs[i] = value + " - " + type;
+                    type = foodValues.getString(NDB_NAME);
+                    value = foodValues.getDouble(NDB_VALUE);
+                    nutrientId = foodValues.getInt(NDB_ID);
+
+                    switch(nutrientId){
+                        case water:
+                            kidneyValues.put(ValuesEntry.COLUMN_FLUID, value);
+                            break;
+
+                        case energy:
+                            kidneyValues.put(ValuesEntry.COLUMN_KCAL, value);
+                            break;
+
+                        case carbohydrate:
+                            kidneyValues.put(ValuesEntry.COLUMN_CARBON, value);
+                            break;
+
+                        case fat:
+                            kidneyValues.put(ValuesEntry.COLUMN_FAT, value);
+                            break;
+
+                        case protein:
+                            kidneyValues.put(ValuesEntry.COLUMN_PROTEIN, value);
+                            break;
+
+                        case phosphorus:
+                            kidneyValues.put(ValuesEntry.COLUMN_PHOSPHORUS, value);
+                            break;
+
+                        case sodium:
+                            kidneyValues.put(ValuesEntry.COLUMN_SODIUM, value);
+                            break;
+
+                        case potassium:
+                            kidneyValues.put(ValuesEntry.COLUMN_POTASSIUM, value);
+                            break;
+
+
+                    }
+
+
+                    resultStrs[i] = value + "(" + nutrientId + ") " + " - " + type;
                 }
+
+                cVVector.add(kidneyValues);
+
+                // Sort order:  Ascending, by date.
+                String sortOrder = KidneyContract.JournalEntry.COLUMN_DATE + " ASC";
+                Uri weatherForLocationUri = KidneyContract.JournalEntry.buildJournalWithStartDate(
+                        System.currentTimeMillis());
+
+                // Students: Uncomment the next lines to display what what you stored in the bulkInsert
+
+                //            Cursor cur = mContext.getContentResolver().query(weatherForLocationUri,
+                //                    null, null, null, sortOrder);
+                //
+                //            cVVector = new Vector<ContentValues>(cur.getCount());
+                //            if ( cur.moveToFirst() ) {
+                //                do {
+                //                    ContentValues cv = new ContentValues();
+                //                    DatabaseUtils.cursorRowToContentValues(cur, cv);
+                //                    cVVector.add(cv);
+                //                } while (cur.moveToNext());
+                //            }
+
+                Log.d(LOG_TAG, "FetchValuesTask Complete. " + cVVector.size() + " Inserted " + kidneyValues);
+
+                //String[] resultStrs = convertContentValuesToUXFormat(cVVector);
+
                 return resultStrs;
+
+                } catch (JSONException e) {
+                    Log.e(LOG_TAG, e.getMessage(), e);
+                    e.printStackTrace();
+                }
+                return null;
             }
 
             @Override
@@ -318,7 +457,7 @@ public class ChooseTheMeal extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String[] result) {
-                if (result != null) {
+                if (result != null & mFood != null) {
                     mFood.clear();
                     for (String dayForecastStr : result) {
                         mFood.add(dayForecastStr);

@@ -93,7 +93,7 @@ public class KidneyContract {
         public static final String TABLE_NAME = "values";
 
         public static final String COLUMN_DATE = "date";
-        public static final String COLUMN_KCAL = "kcal";
+        public static final String COLUMN_KCAL = "kcal";;
         public static final String COLUMN_CARBON = "carbon";
         public static final String COLUMN_FAT = "fat";
         public static final String COLUMN_PROTEIN = "protein";
