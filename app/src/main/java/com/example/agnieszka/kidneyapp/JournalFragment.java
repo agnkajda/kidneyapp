@@ -29,9 +29,9 @@ import com.example.agnieszka.kidneyapp.data.KidneyContract;
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
-public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class JournalFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
+    public static final String LOG_TAG = JournalFragment.class.getSimpleName();
     private ForecastAdapter mForecastAdapter;
 
     private ListView mListView;
@@ -115,7 +115,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         public void onItemSelected(Uri dateUri);
     }
 
-    public ForecastFragment() {
+    public JournalFragment() {
     }
 
     @Override
@@ -157,10 +157,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.journal_main, container, false);
 
         // Get a reference to the ListView, and attach this adapter to it.
-        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        mListView = (ListView) rootView.findViewById(R.id.listview_journal);
         mListView.setAdapter(mForecastAdapter);
 
 
@@ -197,16 +197,16 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
-    // If there's instance state, mine it for useful information.
-    // The end-goal here is that the user never knows that turning their device sideways
-    // does crazy lifecycle related things.  It should feel like some stuff stretched out,
-    // or magically appeared to take advantage of room, but data or place in the app was never
-    // actually *lost*.
-    if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-        // The listview probably hasn't even been populated yet.  Actually perform the
-        // swapout in onLoadFinished.
-        mPosition = savedInstanceState.getInt(SELECTED_KEY);
-    }
+        // If there's instance state, mine it for useful information.
+        // The end-goal here is that the user never knows that turning their device sideways
+        // does crazy lifecycle related things.  It should feel like some stuff stretched out,
+        // or magically appeared to take advantage of room, but data or place in the app was never
+        // actually *lost*.
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
         mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         return rootView;
     }
@@ -301,6 +301,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mUseTodayLayout = useTodayLayout;
         if (mForecastAdapter != null) {
             mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
-            }
         }
+    }
 }
